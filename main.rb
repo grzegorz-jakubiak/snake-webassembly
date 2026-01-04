@@ -26,40 +26,42 @@ class Board
 end
 
 class Snake
-  attr_reader :length
   attr_writer :direction
 
-  def initialize(x, y)
-    @head_x = x
-    @head_y = y
-    @length = 4
-    @tail_x = x
-    @tail_y = y + @length
+  def initialize(x, y, length = 4)
+    @points = Array.new(length) { |index| [x, y - index] }
     @direction = :up
   end
 
+  def length
+    @points.size
+  end
+
   def head
-    [@head_x, @head_y]
+    @points[0].dup
   end
 
   def tail
-    [@tail_x, @tail_y]
+    @points.last.dup
   end
 
-  def grow(unit = 1)
-    @length += unit
+  def grow
+    @points << tail
   end
 
   def move
+    new_head = head
     case @direction
     when :up
-      # MOVE UP
+      new_head[1] += 1
     when :down
-      # MOVE DOWN
+      new_head[1] -= 1
     when :left
-      # MOVE LEFT
+      new_head[0] -= 1
     when :right
-      # MOVE RIGHT
+      new_head[0] += 1
     end
+    @points.pop
+    @points.unshift(new_head)
   end
 end
