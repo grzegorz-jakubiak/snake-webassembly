@@ -1,0 +1,14 @@
+# devenv local state
+.devenv/
+
+# direnv (if you use it)
+.direnv/
+
+# Nix build results
+result
+result-*
+
+# Editor / OS noise
+.DS_Store
+.idea/
+.vscode/
