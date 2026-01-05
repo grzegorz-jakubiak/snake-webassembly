@@ -9,7 +9,9 @@ class Board
   end
 
   def place_snake(snake)
-    # TODO
+    snake.coordinates.each do |points|
+      @board[*points] = :snake
+    end
   end
 
   def place_food
@@ -31,6 +33,10 @@ class Snake
   def initialize(x, y, length = 4)
     @points = Array.new(length) { |index| [x, y - index] }
     @direction = :up
+  end
+
+  def coordinates
+    @points
   end
 
   def length
