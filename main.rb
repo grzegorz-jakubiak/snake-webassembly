@@ -25,6 +25,10 @@ class Board
       end
     end
   end
+
+  def clear
+    @board = Matrix.zero(@size)
+  end
 end
 
 class Snake
