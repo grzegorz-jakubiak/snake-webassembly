@@ -8,6 +8,10 @@ class Board
     @size = size
   end
 
+  def [](x, y)
+    @board[x, y]
+  end
+
   def place_snake(snake)
     snake.coordinates.each do |points|
       @board[*points] = :snake
@@ -73,5 +77,29 @@ class Snake
     end
     @points.pop
     @points.unshift(new_head)
+  end
+end
+
+class Engine
+  def initialize
+    @board = Board.new(30)
+    @snake = Snake.new(14, 14)
+  end
+
+  def start
+    loop do
+      @board.place_snake(@snake)
+      @board.place_food
+      @snake.move
+      case @board[*@snake.head]
+      when 0
+        # OKAY
+      when :food
+        @snake.grow
+      when nil, :snake
+        break
+      end
+      @board.clear
+    end
   end
 end
