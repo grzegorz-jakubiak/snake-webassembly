@@ -1,3 +1,4 @@
+require 'js'
 require 'matrix'
 
 class Board
@@ -10,6 +11,11 @@ class Board
 
   def [](x, y)
     @board[x, y]
+  end
+
+  def each(&block)
+    return to_enum :each, which unless block_given?
+    @board.each_with_index {|e, row, col| yield e, row, col }
   end
 
   def place_snake(snake)
@@ -100,6 +106,27 @@ class Engine
         break
       end
       @board.clear
+    end
+  end
+end
+
+class Renderer
+  def initalize(board)
+    @board = board
+    @canvas_element = JS.global[:document].getElementById('canvas')
+    @context = @canvas_element.getContext('2d')
+    @width_ratio = @canvas_element[:width] / @board.size
+    @height_ration = @canvas_element[:height] / @board.size
+  end
+
+  def render
+    @context.strokeRect(0, 0, @canvas_element[:width], @canvas_element[:height])
+    @board.each do |e, row, col|
+      if e == :snake
+        x = row * @width_ratio
+        y = col * @height_ratio
+        context.fillRect(x, y, 10, 10)
+      end
     end
   end
 end
