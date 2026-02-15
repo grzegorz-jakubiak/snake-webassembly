@@ -4,20 +4,20 @@
       vars = {
   version = "1.11.2";
   system = "aarch64-darwin";
-  devenv_root = "/Users/grzegorzjakubiak/Local Documents/Projects/snake";
-  project_input_ref = "path:/Users/grzegorzjakubiak/Local Documents/Projects/snake";
-  devenv_dotfile = "/Users/grzegorzjakubiak/Local Documents/Projects/snake/.devenv";
+  devenv_root = "/Users/grzegorzjakubiak/Docs/Projects/snake";
+  project_input_ref = "path:/Users/grzegorzjakubiak/Docs/Projects/snake";
+  devenv_dotfile = "/Users/grzegorzjakubiak/Docs/Projects/snake/.devenv";
   devenv_dotfile_path = ./.devenv;
   devenv_tmpdir = "/var/folders/6f/6qdk64n11_39lmdyd6zd2gyw0000gn/T/";
-  devenv_runtime = "/var/folders/6f/6qdk64n11_39lmdyd6zd2gyw0000gn/T/devenv-86c545a";
+  devenv_runtime = "/var/folders/6f/6qdk64n11_39lmdyd6zd2gyw0000gn/T/devenv-1a2eef2";
   devenv_istesting = false;
   devenv_direnvrc_latest_version = 1;
   container_name = null;
   active_profiles = [
   ];
-  hostname = "Grzegorzs-MacBook-Air.local";
+  hostname = "Mac.fritz.box";
   username = "grzegorzjakubiak";
-  git_root = "/Users/grzegorzjakubiak/Local Documents/Projects/snake";
+  git_root = "/Users/grzegorzjakubiak/Docs/Projects/snake";
   secretspec = null;
 };
     in
@@ -41,20 +41,20 @@
       vars = {
   version = "1.11.2";
   system = "aarch64-darwin";
-  devenv_root = "/Users/grzegorzjakubiak/Local Documents/Projects/snake";
-  project_input_ref = "path:/Users/grzegorzjakubiak/Local Documents/Projects/snake";
-  devenv_dotfile = "/Users/grzegorzjakubiak/Local Documents/Projects/snake/.devenv";
+  devenv_root = "/Users/grzegorzjakubiak/Docs/Projects/snake";
+  project_input_ref = "path:/Users/grzegorzjakubiak/Docs/Projects/snake";
+  devenv_dotfile = "/Users/grzegorzjakubiak/Docs/Projects/snake/.devenv";
   devenv_dotfile_path = ./.devenv;
   devenv_tmpdir = "/var/folders/6f/6qdk64n11_39lmdyd6zd2gyw0000gn/T/";
-  devenv_runtime = "/var/folders/6f/6qdk64n11_39lmdyd6zd2gyw0000gn/T/devenv-86c545a";
+  devenv_runtime = "/var/folders/6f/6qdk64n11_39lmdyd6zd2gyw0000gn/T/devenv-1a2eef2";
   devenv_istesting = false;
   devenv_direnvrc_latest_version = 1;
   container_name = null;
   active_profiles = [
   ];
-  hostname = "Grzegorzs-MacBook-Air.local";
+  hostname = "Mac.fritz.box";
   username = "grzegorzjakubiak";
-  git_root = "/Users/grzegorzjakubiak/Local Documents/Projects/snake";
+  git_root = "/Users/grzegorzjakubiak/Docs/Projects/snake";
   secretspec = null;
 };
       devenv =
