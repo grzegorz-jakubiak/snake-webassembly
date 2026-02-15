@@ -12,3 +12,17 @@ result-*
 .DS_Store
 .idea/
 .vscode/
+
+# Bundler and Ruby
+/.bundle/
+/Gemfile.lock
+
+# Ruby versions installed locally (like your rubies/ folder)
+rubies/
+
+# WASM builds and artifacts
+build/
+ruby-web.wasm
+
+# Node / JS dependencies (if any appear later)
+/node_modules/
