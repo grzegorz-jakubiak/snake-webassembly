@@ -1,6 +1,9 @@
 require 'js'
 require 'matrix'
 
+DOCUMENT = JS.global[:document]
+WINDOW = JS.global[:window]
+
 class Board
   include Enumerable
 
@@ -109,6 +112,19 @@ class Engine
   end
 
   def start
+    WINDOW.addEventListener('keydown') do |event|
+      case event[:key].to_s
+      when 'ArrowDown'
+        @snake.direction = :down
+      when 'ArrowUp'
+        @snake.direction = :up
+      when 'ArrowLeft'
+        @snake.direction = :left
+      when 'ArrowRight'
+        @snake.direction = :right
+      end
+    end
+
     tick = JS.global.setInterval(
       proc do
         @board.place_snake(@snake)
@@ -126,14 +142,14 @@ class Engine
 
         @board.clear_but_food
       end,
-    100)
+    900)
   end
 end
 
 class Renderer
   def initialize(board)
     @board = board
-    @canvas_element = JS.global[:document].getElementById('canvas')
+    @canvas_element = DOCUMENT.getElementById('canvas')
     @context = @canvas_element.getContext('2d')
     @width_ratio = @canvas_element[:width].to_i / @board.size
     @height_ratio = @canvas_element[:height].to_i / @board.size
