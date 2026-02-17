@@ -116,12 +116,11 @@ class Engine
         @renderer.render
         @snake.move
 
-        case @board[*head]
+        case @board[*@snake.head]
         when :food
           @snake.grow
           @board.place_food
         when nil, :snake
-          puts 'I hit it!'
           JS.global.clearInterval(tick)
         end
 
