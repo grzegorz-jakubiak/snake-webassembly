@@ -15,7 +15,7 @@ class Board
   end
 
   def [](x, y)
-    return nil if x.negative? || x > size || y.negative? || y > size
+    return nil if x.negative? || x > size - 1 || y.negative? || y > size - 1
     @board[x, y]
   end
 
@@ -109,40 +109,60 @@ class Engine
     @board = Board.new(30)
     @snake = Snake.new(14, 14)
     @renderer = Renderer.new(@board)
+    @direction = :up
   end
 
   def start
+    process_user_input
+
+    @tick = JS.global.setInterval(
+      proc do
+        update_simulation
+        render
+      end,
+    900)
+  end
+
+  private
+
+  def process_user_input
     WINDOW.addEventListener('keydown') do |event|
       case event[:key].to_s
       when 'ArrowDown'
-        @snake.direction = :down
+        @direction = :down
       when 'ArrowUp'
-        @snake.direction = :up
+        @direction = :up
       when 'ArrowLeft'
-        @snake.direction = :left
+        @direction = :left
       when 'ArrowRight'
-        @snake.direction = :right
+        @direction = :right
       end
     end
+  end
 
-    tick = JS.global.setInterval(
-      proc do
-        @board.place_snake(@snake)
-        @board.place_food
-        @renderer.render
-        @snake.move
+  def update_simulation
+    @snake.direction = @direction
+    @snake.move
 
-        case @board[*@snake.head]
-        when :food
-          @snake.grow
-          @board.place_food
-        when nil, :snake
-          JS.global.clearInterval(tick)
-        end
+    case @board[*@snake.head]
+    when nil, :snake
+      stop_game
+      return
+    when :food
+      @snake.grow
+    end
 
-        @board.clear_but_food
-      end,
-    900)
+    @board.clear_but_food
+    @board.place_snake(@snake)
+    @board.place_food
+  end
+
+  def render
+    @renderer.render
+  end
+
+  def stop_game
+    JS.global.clearInterval(@tick)
   end
 end
 
