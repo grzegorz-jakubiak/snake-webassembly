@@ -156,7 +156,6 @@ class Renderer
   def render
     @context.clearRect(0, 0, @canvas_width, @canvas_height)
 
-    # Proper pixel-aligned border
     @context.strokeRect(
       0.5,
       0.5,
@@ -172,7 +171,7 @@ class Renderer
 
   def render_snake
     @snake.coordinates.each do |x, y|
-      draw_cell(x, y)
+      draw_snake_cell(x, y)
     end
   end
 
@@ -180,10 +179,26 @@ class Renderer
     food = @food_getter.call
     return unless food
 
-    draw_cell(*food)
+    grid_x, grid_y = food
+
+    center_x = (grid_x * @cell_width) + (@cell_width / 2.0)
+    center_y = (grid_y * @cell_height) + (@cell_height / 2.0)
+
+    @context.save
+    @context.translate(center_x, center_y)
+    @context.rotate(Math::PI / 4.0)
+
+    @context.fillRect(
+      -@cell_width / 2.0,
+      -@cell_height / 2.0,
+      @cell_width,
+      @cell_height
+    )
+
+    @context.restore
   end
 
-  def draw_cell(grid_x, grid_y)
+  def draw_snake_cell(grid_x, grid_y)
     x = grid_x * @cell_width
     y = grid_y * @cell_height
 
