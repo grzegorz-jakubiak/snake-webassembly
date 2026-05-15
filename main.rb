@@ -52,6 +52,7 @@ class Engine
     @snake = Snake.new(14, 14)
     @direction = :up
     @food = nil
+    @game_over = false
 
     place_food
 
@@ -92,18 +93,16 @@ class Engine
   end
 
   def update_simulation
+    return if @game_over
+
     @snake.direction = @direction
     @snake.move
 
     head_x, head_y = @snake.head
     body = @snake.coordinates[0...-1]
 
-    if head_x.negative? ||
-       head_x >= @board_size ||
-       head_y.negative? ||
-       head_y >= @board_size ||
-       body.include?(@snake.head)
-
+    if head_x < 0 || head_x >= @board_size || head_y < 0 || head_y >= @board_size || body.include?(@snake.head)
+      @game_over = true
       stop_game
       return
     end
