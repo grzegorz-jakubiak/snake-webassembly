@@ -1,63 +1,7 @@
 require 'js'
-require 'matrix'
 
 DOCUMENT = JS.global[:document]
 WINDOW = JS.global[:window]
-
-class Board
-  include Enumerable
-
-  attr_reader :size
-
-  def initialize(size = 30)
-    @board = Matrix.zero(size)
-    @size = size
-  end
-
-  def [](x, y)
-    return nil if x.negative? || x > size - 1 || y.negative? || y > size - 1
-    @board[x, y]
-  end
-
-  def each(&block)
-    return to_enum :each, which unless block_given?
-    @board.each_with_index do |elem, row_index, col_index|
-      yield elem, row_index, col_index
-    end
-  end
-
-  def place_snake(snake)
-    snake.coordinates.each do |points|
-      @board[*points] = :snake
-    end
-  end
-
-  def place_food
-    return if @board.one?(:food)
-
-    loop do
-      x = rand(@size)
-      y = rand(@size)
-
-      if @board[x, y] == 0
-        @board[x, y] = :food
-        break
-      end
-    end
-  end
-
-  def clear_but_food
-    each do |e, row, col|
-      next if e == :food
-
-      @board[row, col] = 0
-    end
-  end
-
-  def clear
-    @board = Matrix.zero(@size)
-  end
-end
 
 class Snake
   attr_writer :direction
@@ -106,10 +50,11 @@ end
 
 class Engine
   def initialize
-    @board = Board.new(30)
+    @board_size = 30
     @snake = Snake.new(14, 14)
-    @renderer = Renderer.new(@board)
     @direction = :up
+    @food = place_food
+    @renderer = Renderer.new(@board_size, @snake, @food)
   end
 
   def start
@@ -142,19 +87,34 @@ class Engine
 
   def update_simulation
     @snake.direction = @direction
+    place_food
     @snake.move
 
-    case @board[*@snake.head]
-    when nil, :snake
+    head_x, head_y = @snake.head
+    body = @snake.coordinates[0...-1]
+
+    if head_x.negative? ||
+      head_x >= @board_size ||
+      head_y.negative? ||
+      head_y >= @board_size || body.include?(@snake.head)
       stop_game
-      return
-    when :food
-      @snake.grow
     end
 
-    @board.clear_but_food
-    @board.place_snake(@snake)
-    @board.place_food
+    if @snake.head == @food
+      @snake.grow
+      @food = nil
+    end
+  end
+
+  def place_food
+    return if @food
+
+    loop do
+      x = rand(@board_size)
+      y = rand(@board_size)
+
+      break @food = [x, y] unless @snake.coordinates.include?([x, y])
+    end
   end
 
   def render
@@ -167,28 +127,28 @@ class Engine
 end
 
 class Renderer
-  def initialize(board)
-    @board = board
+  def initialize(board_size, snake, food)
+    @board_size = board_size
+    @snake = snake
+    @food = food
     @canvas_element = DOCUMENT.getElementById('canvas')
     @context = @canvas_element.getContext('2d')
-    @width_ratio = @canvas_element[:width].to_i / @board.size
-    @height_ratio = @canvas_element[:height].to_i / @board.size
+    @width_ratio = @canvas_element[:width].to_i / @board_size
+    @height_ratio = @canvas_element[:height].to_i / @board_size
   end
 
   def render
     @context.clearRect(0, 0, @canvas_element[:width], @canvas_element[:height])
     @context.strokeRect(0, 0, @canvas_element[:width], @canvas_element[:height])
-    @board.each do |e, row, col|
-      case e
-      when :snake
-        x = row * @width_ratio
-        y = col * @height_ratio
-        @context.fillRect(x, y, 10, 10)
-      when :food
-        x = row * @width_ratio
-        y = col * @height_ratio
-        @context.fillRect(x, y, 10, 10)
-      end
+    @snake.coordinates.each do |(x, y)|
+      x = x * @width_ratio
+      y = y * @height_ratio
+      @context.fillRect(x, y, 10, 10)
+    end
+    if @food
+      x = @food[0] * @width_ratio
+      y = @food[1] * @height_ratio
+      @context.fillRect(x, y, 10, 10)
     end
   end
 end
