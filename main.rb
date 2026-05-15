@@ -15,16 +15,12 @@ class Snake
     @points
   end
 
-  def length
-    @points.size
-  end
-
   def head
     @points.last.dup
   end
 
   def tail
-    @points[0].dup
+    @points.first.dup
   end
 
   def grow
@@ -33,6 +29,7 @@ class Snake
 
   def move
     new_head = head
+
     case @direction
     when :up
       new_head[1] -= 1
@@ -43,6 +40,7 @@ class Snake
     when :right
       new_head[0] += 1
     end
+
     @points.shift
     @points.push(new_head)
   end
@@ -53,8 +51,15 @@ class Engine
     @board_size = 30
     @snake = Snake.new(14, 14)
     @direction = :up
-    @food = place_food
-    @renderer = Renderer.new(@board_size, @snake, @food)
+    @food = nil
+
+    place_food
+
+    @renderer = Renderer.new(
+      @board_size,
+      @snake,
+      -> { @food }
+    )
   end
 
   def start
@@ -65,7 +70,8 @@ class Engine
         update_simulation
         render
       end,
-    900)
+      900
+    )
   end
 
   private
@@ -87,22 +93,25 @@ class Engine
 
   def update_simulation
     @snake.direction = @direction
-    place_food
     @snake.move
 
     head_x, head_y = @snake.head
     body = @snake.coordinates[0...-1]
 
     if head_x.negative? ||
-      head_x >= @board_size ||
-      head_y.negative? ||
-      head_y >= @board_size || body.include?(@snake.head)
+       head_x >= @board_size ||
+       head_y.negative? ||
+       head_y >= @board_size ||
+       body.include?(@snake.head)
+
       stop_game
+      return
     end
 
     if @snake.head == @food
       @snake.grow
       @food = nil
+      place_food
     end
   end
 
@@ -113,7 +122,10 @@ class Engine
       x = rand(@board_size)
       y = rand(@board_size)
 
-      break @food = [x, y] unless @snake.coordinates.include?([x, y])
+      unless @snake.coordinates.include?([x, y])
+        @food = [x, y]
+        break
+      end
     end
   end
 
@@ -127,28 +139,60 @@ class Engine
 end
 
 class Renderer
-  def initialize(board_size, snake, food)
+  def initialize(board_size, snake, food_getter)
     @board_size = board_size
     @snake = snake
-    @food = food
+    @food_getter = food_getter
+
     @canvas_element = DOCUMENT.getElementById('canvas')
     @context = @canvas_element.getContext('2d')
-    @width_ratio = @canvas_element[:width].to_i / @board_size
-    @height_ratio = @canvas_element[:height].to_i / @board_size
+
+    @canvas_width = @canvas_element[:width].to_i
+    @canvas_height = @canvas_element[:height].to_i
+
+    @cell_width = @canvas_width.to_f / @board_size
+    @cell_height = @canvas_height.to_f / @board_size
   end
 
   def render
-    @context.clearRect(0, 0, @canvas_element[:width], @canvas_element[:height])
-    @context.strokeRect(0, 0, @canvas_element[:width], @canvas_element[:height])
-    @snake.coordinates.each do |(x, y)|
-      x = x * @width_ratio
-      y = y * @height_ratio
-      @context.fillRect(x, y, 10, 10)
+    @context.clearRect(0, 0, @canvas_width, @canvas_height)
+
+    # Proper pixel-aligned border
+    @context.strokeRect(
+      0.5,
+      0.5,
+      @canvas_width - 1,
+      @canvas_height - 1
+    )
+
+    render_snake
+    render_food
+  end
+
+  private
+
+  def render_snake
+    @snake.coordinates.each do |x, y|
+      draw_cell(x, y)
     end
-    if @food
-      x = @food[0] * @width_ratio
-      y = @food[1] * @height_ratio
-      @context.fillRect(x, y, 10, 10)
-    end
+  end
+
+  def render_food
+    food = @food_getter.call
+    return unless food
+
+    draw_cell(*food)
+  end
+
+  def draw_cell(grid_x, grid_y)
+    x = grid_x * @cell_width
+    y = grid_y * @cell_height
+
+    @context.fillRect(
+      x,
+      y,
+      @cell_width,
+      @cell_height
+    )
   end
 end
