@@ -71,7 +71,7 @@ class Engine
         update_simulation
         render
       end,
-      900
+      200
     )
   end
 
