@@ -81,13 +81,13 @@ class Engine
     WINDOW.addEventListener('keydown') do |event|
       case event[:key].to_s
       when 'ArrowDown'
-        @direction = :down
+        @direction = :down unless @direction == :up
       when 'ArrowUp'
-        @direction = :up
+        @direction = :up unless @direction == :down
       when 'ArrowLeft'
-        @direction = :left
+        @direction = :left unless @direction == :right
       when 'ArrowRight'
-        @direction = :right
+        @direction = :right unless @direction == :left
       end
     end
   end
