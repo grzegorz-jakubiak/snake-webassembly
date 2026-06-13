@@ -15,7 +15,7 @@
   container_name = null;
   active_profiles = [
   ];
-  hostname = "Mac.fritz.box";
+  hostname = "Grzegorzs-MacBook-Air.local";
   username = "grzegorzjakubiak";
   git_root = "/Users/grzegorzjakubiak/Docs/Projects/snake";
   secretspec = null;
@@ -52,7 +52,7 @@
   container_name = null;
   active_profiles = [
   ];
-  hostname = "Mac.fritz.box";
+  hostname = "Grzegorzs-MacBook-Air.local";
   username = "grzegorzjakubiak";
   git_root = "/Users/grzegorzjakubiak/Docs/Projects/snake";
   secretspec = null;
