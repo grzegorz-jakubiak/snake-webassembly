@@ -210,3 +210,5 @@ class Renderer
     )
   end
 end
+
+Engine.new.start

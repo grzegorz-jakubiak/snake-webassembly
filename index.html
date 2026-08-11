@@ -15,7 +15,6 @@
 
       const rubyCode = await fetch('./main.rb').then(r => r.text())
       vm.eval(rubyCode)
-      vm.eval('Engine.new.start')
     </script>
   </body>
 </html>
