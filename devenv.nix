@@ -15,7 +15,7 @@
 
   languages.ruby = {
     enable = true;
-    bundler.enable = false;
-    version = "3.4";
+    bundler.enable = true;
+    version = "4.0.6";
   };
 }
