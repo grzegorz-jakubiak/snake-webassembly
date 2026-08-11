@@ -8,7 +8,7 @@
     <canvas id="canvas" width="500" height="500"></canvas>
 
     <script type="module">
-      import { DefaultRubyVM } from "https://cdn.jsdelivr.net/npm/@ruby/wasm-wasi@2.8.1/dist/browser/+esm"
+      import { DefaultRubyVM } from "https://cdn.jsdelivr.net/npm/@ruby/wasm-wasi@2.10.1/dist/browser/+esm"
       const response = await fetch("./ruby-web.wasm")
       const module = await WebAssembly.compileStreaming(response)
       const { vm } = await DefaultRubyVM(module)
