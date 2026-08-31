@@ -3,6 +3,9 @@ require 'js'
 DOCUMENT = JS.global[:document]
 WINDOW = JS.global[:window]
 
+LCD_BACKGROUND = '#A8B89A'
+LCD_PIXEL = '#26352A'
+
 class Snake
   attr_writer :direction
 
@@ -193,12 +196,17 @@ class Renderer
   end
 
   def render
-    @context.clearRect(
+    @context[:fillStyle] = LCD_BACKGROUND
+
+    @context.fillRect(
       0,
       0,
       @canvas_width,
       @canvas_height
     )
+
+    @context[:fillStyle] = LCD_PIXEL
+    @context[:strokeStyle] = LCD_PIXEL
 
     @context.strokeRect(
       0.5,
@@ -215,6 +223,8 @@ class Renderer
   private
 
   def render_snake
+    @context[:fillStyle] = LCD_PIXEL
+
     @snake.coordinates.each do |x, y|
       draw_snake_cell(x, y)
     end
@@ -230,6 +240,8 @@ class Renderer
     center_y = (grid_y * @cell_height) + (@cell_height / 2.0)
 
     @context.save
+
+    @context[:fillStyle] = LCD_PIXEL
 
     @context.translate(center_x, center_y)
     @context.rotate(Math::PI / 4.0)
@@ -248,6 +260,8 @@ class Renderer
     x = grid_x * @cell_width
     y = grid_y * @cell_height
 
+    @context[:fillStyle] = LCD_PIXEL
+
     @context.fillRect(
       x,
       y,
@@ -259,7 +273,8 @@ class Renderer
   def render_game_over
     @context.save
 
-    @context[:fillStyle] = 'rgba(0, 0, 0, 0.6)'
+    @context[:fillStyle] = LCD_PIXEL
+
     @context.fillRect(
       0,
       0,
@@ -267,7 +282,7 @@ class Renderer
       @canvas_height
     )
 
-    @context[:fillStyle] = 'white'
+    @context[:fillStyle] = LCD_BACKGROUND
     @context[:font] = 'bold 40px sans-serif'
     @context[:textAlign] = 'center'
     @context[:textBaseline] = 'middle'

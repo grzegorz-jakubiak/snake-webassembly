@@ -3,17 +3,40 @@
   <head>
     <meta charset="utf-8" />
     <title>Ruby WASM Snake</title>
+    <style>
+      html,
+      body {
+        margin: 0;
+        width: 100%;
+        height: 100%;
+      }
+
+      body {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+
+        background: #A8B89A;
+      }
+
+      canvas {
+        display: block;
+        background: #A8B89A;
+      }
+    </style>
   </head>
   <body>
     <canvas id="canvas" width="500" height="500"></canvas>
 
     <script type="module">
       import { DefaultRubyVM } from "https://cdn.jsdelivr.net/npm/@ruby/wasm-wasi@2.10.1/dist/browser/+esm"
+
       const response = await fetch("./ruby-web.wasm")
       const module = await WebAssembly.compileStreaming(response)
       const { vm } = await DefaultRubyVM(module)
 
-      const rubyCode = await fetch('./main.rb').then(r => r.text())
+      const rubyCode = await fetch("./main.rb").then(r => r.text())
+
       vm.eval(rubyCode)
     </script>
   </body>
